@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consulta CPF</title>
+ 
+ <style>
+     * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      user-select: none;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      -webkit-tap-highlight-color: transparent; /* remove highlight no toque */
+    }
+
+    button:active {
+      background: #1b5e20;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      min-height: 24px;
+    }
+
+    @media (hover: hover) {
+      button:hover {
+        background: #1b5e20;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="Logo Cupom do Frentista.png" alt="Logo Cupom do Frentista" class="logo" />
+    <h2>Consulta de CPF</h2>
+    <input type="text" id="cpf" placeholder="Digite o CPF (somente números)" />
+    <button onclick="consultarCPF()">Consultar</button>
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    async function consultarCPF() {
+      const cpf = document.getElementById("cpf").value.trim();
+      const resultado = document.getElementById("resultado");
+
+      if (cpf.length !== 11 || isNaN(cpf)) {
+        resultado.textContent = "CPF inválido. Digite 11 números.";
+        resultado.style.color = "red";
+        return;
+      }
+
+      try {
+        const res = await fetch("dados.json");
+        const data = await res.json();
+
+        const encontrado = data.find(item => item.cpf === cpf);
+
+        if (encontrado) {
+          resultado.textContent = `Código associado: ${encontrado.codigo}`;
+          resultado.style.color = "green";
+        } else {
+          resultado.textContent = "CPF não encontrado.";
+          resultado.style.color = "red";
+        }
+      } catch (error) {
+        resultado.textContent = "Erro ao buscar os dados.";
+        resultado.style.color = "red";
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>
